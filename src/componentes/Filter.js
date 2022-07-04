@@ -4,7 +4,8 @@ import MyContext from '../Context/MyContext';
 function Filter() {
   const { handleName, filterColum, filterComparison,
     filterValue, handleClick, filterByNumericValues,
-    handleExclui, setFilterByNumericValues } = useContext(MyContext);
+    handleExclui, setFilterByNumericValues, handleClickInput,
+    options, handleChangeSort, handleClickSort } = useContext(MyContext);
 
   return (
     <div>
@@ -66,7 +67,6 @@ function Filter() {
           <p>{ item.value }</p>
           <button
             type="button"
-            // name={ item.colunm }
             onClick={ () => handleExclui(i) }
           >
             x
@@ -74,6 +74,43 @@ function Filter() {
           </button>
         </div>
       ))}
+
+      <select
+        data-testid="column-sort"
+        name="column"
+        onChange={ handleChangeSort }
+      >
+        {
+          options.map((option) => (
+            <option key={ option }>{option}</option>
+          ))
+        }
+      </select>
+
+      <input
+        name="sort"
+        data-testid="column-sort-input-asc"
+        type="radio"
+        value="ASC"
+        onClick={ handleClickInput }
+      />
+
+      <input
+        name="sort"
+        data-testid="column-sort-input-desc"
+        type="radio"
+        value="DESC"
+        onClick={ handleClickInput }
+      />
+
+      <button
+        data-testid="column-sort-button"
+        type="button"
+        onClick={ handleClickSort }
+      >
+        ORDENAR
+      </button>
+
       <button
         data-testid="button-remove-filters"
         type="button"

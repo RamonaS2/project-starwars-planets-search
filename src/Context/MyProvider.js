@@ -13,11 +13,36 @@ function MyProvider({ children }) {
 
   const [filterByNumericValues, setFilterByNumericValues] = useState([]);
 
+  const [options, setOptions] = useState([
+    'population',
+    'orbital_period',
+    'diameter',
+    'rotation_period',
+    'surface_water',
+  ]);
+
+  const [order, setOrder] = useState({
+    column: '',
+    sort: '',
+  });
+
   useEffect(() => {
     const getResults = async () => {
       const api = await apiTable();
-      setData(api.results);
-      setFilterData(api.results);
+
+      const newApi = api.results.sort((a, b) => {
+        const num = -1;
+        if (a.name < b.name) {
+          return num;
+        }
+        if (a.name > b.name) {
+          return 1;
+        }
+        return 0;
+      });
+
+      setData(newApi);
+      setFilterData(newApi);
     };
     getResults();
   }, []);
@@ -77,6 +102,39 @@ function MyProvider({ children }) {
     setFilterByNumericValues(newFilterEx);
   };
 
+  const handleChangeSort = ({ target }) => {
+    setOrder({
+      ...order,
+      column: target.value,
+    });
+  };
+
+  const handleClickInput = ({ target }) => {
+    setOrder(() => ({
+      ...order,
+      sort: target.value,
+    }));
+  };
+
+  const handleClickSort = () => {
+    const { sort, column } = order;
+    const filterWithoutUnknow = filterData
+      .filter((dataColumn) => dataColumn[column] !== 'unknown');
+    const filterUnknow = filterData
+      .filter((dataColumn) => dataColumn[column] === 'unknown');
+    const orderColumn = filterWithoutUnknow.sort((a, b) => {
+      let sortCondition;
+      if (sort === 'ASC') {
+        sortCondition = Number(a[column]) - Number(b[column]);
+      }
+      if (sort === 'DESC') {
+        sortCondition = Number(b[column]) - Number(a[column]);
+      }
+      return sortCondition;
+    });
+    setFilterData([...orderColumn, ...filterUnknow]);
+  };
+
   const contextValue = {
     data,
     filterByName,
@@ -89,6 +147,11 @@ function MyProvider({ children }) {
     filterByNumericValues,
     handleExclui,
     setFilterByNumericValues,
+    handleClickInput,
+    options,
+    handleChangeSort,
+    handleClickSort,
+    setOptions,
   };
 
   return (
