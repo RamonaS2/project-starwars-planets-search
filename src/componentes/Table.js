@@ -1,19 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import apiTable from './ApiTable';
+import React, { useContext } from 'react';
+import Filter from './Filter';
+import MyContext from '../Context/MyContext';
 
 function Table() {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    const getResults = async () => {
-      const api = await apiTable();
-      setData(api.results);
-    };
-    getResults();
-  }, []);
+  const { filterData } = useContext(MyContext);
 
   return (
     <div>
+      <Filter />
       <table>
         <thead>
           <tr>
@@ -33,7 +27,7 @@ function Table() {
           </tr>
         </thead>
         <tbody>
-          {data.map((planeta) => (
+          {filterData.map((planeta) => (
             <tr key={ planeta.name }>
               <td>{planeta.name}</td>
               <td>{planeta.rotation_period}</td>
