@@ -117,20 +117,20 @@ function MyProvider({ children }) {
   };
 
   const handleClickSort = () => {
-    const { sort, column } = order;
+    const { sort, column: columnSort } = order;
     const filterWithoutUnknow = filterData
-      .filter((dataColumn) => dataColumn[column] !== 'unknown');
+      .filter((dataColumn) => dataColumn[columnSort] !== 'unknown');
     const filterUnknow = filterData
-      .filter((dataColumn) => dataColumn[column] === 'unknown');
+      .filter((dataColumn) => dataColumn[columnSort] === 'unknown');
     const orderColumn = filterWithoutUnknow.sort((a, b) => {
-      let sortCondition;
+      let sortUm;
       if (sort === 'ASC') {
-        sortCondition = Number(a[column]) - Number(b[column]);
+        sortUm = Number(a[columnSort]) - Number(b[columnSort]);
       }
       if (sort === 'DESC') {
-        sortCondition = Number(b[column]) - Number(a[column]);
+        sortUm = Number(b[columnSort]) - Number(a[columnSort]);
       }
-      return sortCondition;
+      return sortUm;
     });
     setFilterData([...orderColumn, ...filterUnknow]);
   };
