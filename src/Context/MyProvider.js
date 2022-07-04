@@ -7,6 +7,11 @@ function MyProvider({ children }) {
   const [data, setData] = useState([]);
   const [filterData, setFilterData] = useState([]);
   const [filterByName, setfilterByName] = useState('');
+  const [column, setColumn] = useState('population');
+  const [comparison, setComparison] = useState('maior que');
+  const [value, setValue] = useState('0');
+
+  const [filterByNumericValues, setFilterByNumericValues] = useState([]);
 
   useEffect(() => {
     const getResults = async () => {
@@ -24,14 +29,54 @@ function MyProvider({ children }) {
   useEffect(() => {
     const filterNome = data.filter((planeta) => planeta.name.toLowerCase()
       .includes(filterByName));
-    setFilterData(filterNome);
-  }, [filterByName]);
+
+    const newList = filterByNumericValues
+      .reduce((acc, filtrados) => acc.filter((plan) => {
+        switch (filtrados.comparison) {
+        case 'maior que':
+          return Number(plan[filtrados.column]) > Number(filtrados.value);
+        case 'menor que':
+          return Number(plan[filtrados.column]) < Number(filtrados.value);
+        case 'igual a':
+          return Number(plan[filtrados.column]) === Number(filtrados.value);
+        default:
+          return plan;
+        }
+      }), filterNome);
+
+    setFilterData(newList);
+  }, [filterByName, filterByNumericValues]);
+
+  const filterColum = ({ target }) => {
+    setColumn(target.value);
+  };
+
+  const filterComparison = ({ target }) => {
+    setComparison(target.value);
+  };
+
+  const filterValue = ({ target }) => {
+    setValue(target.value);
+  };
+
+  const handleClick = () => {
+    const todoFilter = {
+      column,
+      comparison,
+      value,
+    };
+    setFilterByNumericValues([...filterByNumericValues, todoFilter]);
+  };
 
   const contextValue = {
     data,
     filterByName,
     handleName,
     filterData,
+    filterColum,
+    filterComparison,
+    filterValue,
+    handleClick,
   };
 
   return (
