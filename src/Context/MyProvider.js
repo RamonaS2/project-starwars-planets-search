@@ -70,6 +70,13 @@ function MyProvider({ children }) {
     umFilter.remove();
   };
 
+  const handleExclui = (name) => {
+    const newFilterEx = filterByNumericValues.filter((_fil, i) => (
+      i !== name
+    ));
+    setFilterByNumericValues(newFilterEx);
+  };
+
   const contextValue = {
     data,
     filterByName,
@@ -79,6 +86,9 @@ function MyProvider({ children }) {
     filterComparison,
     filterValue,
     handleClick,
+    filterByNumericValues,
+    handleExclui,
+    setFilterByNumericValues,
   };
 
   return (
