@@ -66,6 +66,8 @@ function MyProvider({ children }) {
       value,
     };
     setFilterByNumericValues([...filterByNumericValues, todoFilter]);
+    const umFilter = document.getElementById(column);
+    umFilter.remove();
   };
 
   const contextValue = {
